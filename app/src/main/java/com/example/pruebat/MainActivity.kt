@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.pruebat.data.AppDatabase
 import com.example.pruebat.data.DataStoreRepository
 import com.example.pruebat.ui.theme.PruebaTTheme
 import javax.inject.Inject
@@ -31,11 +32,13 @@ class MainActivity : ComponentActivity() {
 
 				navController = rememberNavController()
 				val context = LocalContext.current.applicationContext
+				val database = AppDatabase.getDatabase(context)
 				
 				SetUpNavGraph(
 					navHostController = navController,
 					context = context,
 					mainViewModel = mainViewModel,
+					database = database
 				)
 			}
 		}

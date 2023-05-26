@@ -1,4 +1,4 @@
-package com.example.pruebat.Views
+package com.example.pruebat.views
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.pruebat.data.AppDatabase
 import com.example.pruebat.data.User
 import com.example.pruebat.data.UserRepository
-import com.example.pruebat.data.UserType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch

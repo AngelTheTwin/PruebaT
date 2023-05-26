@@ -8,7 +8,8 @@ import androidx.compose.runtime.getValue
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.pruebat.Views.*
+import com.example.pruebat.data.AppDatabase
+import com.example.pruebat.views.*
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -16,6 +17,7 @@ fun SetUpNavGraph(
 	navHostController: NavHostController,
 	context: Context,
 	mainViewModel: MainViewModel,
+	database: AppDatabase
 ) {
 	val startDestination by mainViewModel.startDestination
 
@@ -43,7 +45,9 @@ fun SetUpNavGraph(
 		composable(
 			route = Screen.Home.route
 		) {
-			MainScreen()
+			MainScreen(
+				database = database
+			)
 		}
 	}
 }

@@ -1,4 +1,4 @@
-package com.example.pruebat.Views
+package com.example.pruebat.views
 
 import android.app.Application
 import androidx.compose.foundation.*

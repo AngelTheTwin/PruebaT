@@ -1,5 +1,6 @@
 package com.example.pruebat.views
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
@@ -10,9 +11,10 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
 import com.example.pruebat.data.Activity
 import com.example.pruebat.data.ActivityDao
 import com.example.pruebat.data.ActivityRepository
@@ -30,7 +32,8 @@ var activities = listOf(
 
 @Composable
 fun HomeScreen(
-	homeScreenViewModel: HomeScreenViewModel
+	homeScreenViewModel: HomeScreenViewModel,
+	navController: NavController
 ) {
 
 	Column(
@@ -42,12 +45,13 @@ fun HomeScreen(
 	) {
 		Text(text = "Actividades", style = MaterialTheme.typography.h4)
 		ActivityList(homeScreenViewModel.activities) { index, activity ->
-
+			homeScreenViewModel.updateActivity(activity)
 		}
 		Button(onClick = {
-			homeScreenViewModel.addActivity(
-				Activity(id = 4, name =  "Activity 3", completed = false, description = "Description 2", isOn = false, dateTime = Date())
-			)
+			navController.navigate("AddActivity")
+//			homeScreenViewModel.addActivity(
+//				Activity(id = 4, name =  "Activity 3", completed = false, description = "Description 2", isOn = false, dateTime = Date())
+//			)
 		}) {
 			Text(text = "Add New Activity")
 		}
@@ -97,7 +101,8 @@ fun HomeScreenPreview() {
 	val repository = ActivityRepository(MockActivityDao())
 	PruebaTTheme {
 		HomeScreen(
-			homeScreenViewModel = HomeScreenViewModel(repository)
+			homeScreenViewModel = HomeScreenViewModel(repository),
+			navController = NavController(context = LocalContext.current)
 		)
 	}
 }

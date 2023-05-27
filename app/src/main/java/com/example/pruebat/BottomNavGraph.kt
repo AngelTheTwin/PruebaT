@@ -7,11 +7,7 @@ import androidx.navigation.compose.composable
 import com.example.pruebat.data.ActivityRepository
 import com.example.pruebat.data.AppDatabase
 import com.example.pruebat.viewmodels.HomeScreenViewModel
-import com.example.pruebat.views.HomeScreen
-import com.example.pruebat.views.ConfiguracionScreen
-import com.example.pruebat.views.EstadisticasScreen
-import com.example.pruebat.views.BottomBarScreen
-import com.example.pruebat.views.RecompensasScreen
+import com.example.pruebat.views.*
 
 @Composable
 fun BottonNavGraph(
@@ -22,9 +18,12 @@ fun BottonNavGraph(
 		navController = navHostController,
 		startDestination = BottomBarScreen.Home.route
 	) {
+		val homeScreenViewModel = HomeScreenViewModel(ActivityRepository(database.activityDao()))
 		composable(route = BottomBarScreen.Home.route) {
-			val homeScreenViewModel = HomeScreenViewModel(ActivityRepository(database.activityDao()))
-			HomeScreen(homeScreenViewModel)
+			HomeScreen(
+				homeScreenViewModel,
+				navHostController
+			)
 		}
 		composable(route = BottomBarScreen.Estadisticas.route) {
 			EstadisticasScreen()
@@ -34,6 +33,12 @@ fun BottonNavGraph(
 		}
 		composable(route = BottomBarScreen.Configuracion.route) {
 			ConfiguracionScreen()
+		}
+		composable(route = "AddActivity") {
+			AddActivity(
+				homeScreenViewModel,
+				navHostController
+			)
 		}
 	}
 }

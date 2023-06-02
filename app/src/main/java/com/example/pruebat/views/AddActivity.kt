@@ -1,5 +1,6 @@
 package com.example.pruebat.views
 
+import android.app.NotificationManager
 import android.app.TimePickerDialog
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement.spacedBy
@@ -13,10 +14,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.app.NotificationCompat
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import com.example.pruebat.R
+import com.example.pruebat.alarm.setAlarm
 import com.example.pruebat.data.Activity
 import com.example.pruebat.data.ActivityRepository
+import com.example.pruebat.notifications.NotificationManagerSingleton
 import com.example.pruebat.ui.theme.PruebaTTheme
 import com.example.pruebat.viewmodels.HomeScreenViewModel
 import java.text.DateFormat
@@ -29,6 +34,7 @@ fun AddActivity(
 	homeScreenViewModel: HomeScreenViewModel,
 	navController: NavController
 ) {
+	val context = LocalContext.current
 	var activity: Activity by remember {
 		mutableStateOf(Activity(
 			name = "",
@@ -99,6 +105,7 @@ fun AddActivity(
 							popUpTo(navController.graph.findStartDestination().id)
 							launchSingleTop = true
 						}
+						setAlarm(context, activity)
 					},
 					modifier = Modifier.padding(top = 16.dp)
 				) {

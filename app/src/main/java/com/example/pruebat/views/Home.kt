@@ -3,6 +3,8 @@ package com.example.pruebat.views
 import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
 import androidx.compose.material.Checkbox
 import androidx.compose.material.MaterialTheme
@@ -36,42 +38,30 @@ fun HomeScreen(
 	navController: NavController
 ) {
 
-	Column(
+	LazyColumn(
 		modifier = Modifier
-			.fillMaxSize()
+			.fillMaxHeight()
 			.background(MaterialTheme.colors.background)
 			.padding(horizontal = 8.dp),
 		horizontalAlignment = Alignment.CenterHorizontally
 	) {
-		Text(text = "Actividades", style = MaterialTheme.typography.h4)
-		ActivityList(homeScreenViewModel.activities) { index, activity ->
-			homeScreenViewModel.updateActivity(activity)
+		item {
+			Text(text = "Actividades", style = MaterialTheme.typography.h4)
 		}
-		Button(onClick = {
-			navController.navigate("AddActivity")
-//			homeScreenViewModel.addActivity(
-//				Activity(id = 4, name =  "Activity 3", completed = false, description = "Description 2", isOn = false, dateTime = Date())
-//			)
-		}) {
-			Text(text = "Add New Activity")
-		}
-	}
-}
-
-@Composable
-fun ActivityList(activities: SnapshotStateList<Activity>, updateActivity: (Int, Activity) -> Unit) {
-	// Sort activities by date, elders first
-	val sortedActivities = activities.sortedBy { it.dateTime }
-
-	Column(modifier = Modifier.padding(top = 16.dp)) {
-		sortedActivities.forEachIndexed { index, activity ->
+		items(homeScreenViewModel.activities) { activity ->
 			ActivityItem(activity = activity) {
-				updateActivity(index, activity.copy(isOn = activity.isOn.not()))
+				homeScreenViewModel.updateActivity(activity.copy(isOn = activity.isOn.not()))
 			}
 		}
+		item {
+			Button(onClick = {
+				navController.navigate("AddActivity")
+			}) {
+				Text(text = "Add New Activity")
+			}
+		}
+
 	}
-
-
 }
 
 @Composable

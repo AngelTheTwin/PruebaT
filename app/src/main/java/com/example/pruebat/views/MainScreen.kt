@@ -1,10 +1,13 @@
 package com.example.pruebat.views
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -24,11 +27,14 @@ fun MainScreen(
 
 	Scaffold(
 		bottomBar = { BottomBar(navController = bottomBarNavController)}
-	) {
-		BottonNavGraph(
-			navHostController = bottomBarNavController,
-			database = database
-		)
+	) { innerPadding ->
+		Box(modifier = Modifier.padding(innerPadding)) {
+			BottonNavGraph(
+				navHostController = bottomBarNavController,
+				database = database
+			)
+		}
+
 	}
 }
 

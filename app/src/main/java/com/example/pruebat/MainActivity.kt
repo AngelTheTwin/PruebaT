@@ -13,6 +13,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.pruebat.data.AppDatabase
 import com.example.pruebat.data.DataStoreRepository
+import com.example.pruebat.notifications.NotificationManagerSingleton
 import com.example.pruebat.ui.theme.PruebaTTheme
 import javax.inject.Inject
 
@@ -23,6 +24,7 @@ class MainActivity : ComponentActivity() {
 	@OptIn(ExperimentalFoundationApi::class)
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
+		NotificationManagerSingleton.initialize(this)
 
 		setContent {
 			PruebaTTheme {

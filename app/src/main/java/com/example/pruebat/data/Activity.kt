@@ -13,6 +13,7 @@ data class Activity(
 	val completed: Boolean,
 	val description: String,
 	var isOn: Boolean,
+	var isEditable: Boolean,
 	@TypeConverters(ActivityTypeConverter::class)
 	val dateTime: Date = Date(),
 )

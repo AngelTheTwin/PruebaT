@@ -1,9 +1,13 @@
 package com.example.pruebat.viewmodels
 
+import android.content.Context
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pruebat.alarm.cancelAlarm
+import com.example.pruebat.alarm.setAlarm
 import com.example.pruebat.data.Activity
 import com.example.pruebat.data.ActivityRepository
 import kotlinx.coroutines.Dispatchers
@@ -28,10 +32,13 @@ class HomeScreenViewModel (private val activityRepository: ActivityRepository): 
 		}
 	}
 
-	fun addActivity(activity: Activity) {
+	fun addActivity(context:Context, activity: Activity) {
 		viewModelScope.launch {
 			withContext(Dispatchers.IO) {
-				activityRepository.createActivity(activity)
+				val id = activityRepository.createActivity(activity)
+				if (activity.isOn) {
+					setAlarm(context, activity.copy(id.toInt()))
+				}
 			}
 		}
 	}
@@ -48,6 +55,19 @@ class HomeScreenViewModel (private val activityRepository: ActivityRepository): 
 		viewModelScope.launch {
 			withContext(Dispatchers.IO) {
 				activityRepository.deleteActivity(activity)
+			}
+		}
+	}
+
+	fun deactivateActivity(activity: Activity, context: Context) {
+		if (activity.isOn) {
+			setAlarm(context, activity)
+		} else {
+			cancelAlarm(context, activity)
+		}
+		viewModelScope.launch {
+			withContext(Dispatchers.IO) {
+				activityRepository.updateActivity(activity)
 			}
 		}
 	}

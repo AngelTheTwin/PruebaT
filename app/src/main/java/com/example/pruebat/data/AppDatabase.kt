@@ -9,7 +9,7 @@ import androidx.room.TypeConverters
 
 @Database(
 	entities = [User::class, Activity::class],
-	version = 2,
+	version = 3,
 	exportSchema = false
 )
 @TypeConverters( ActivityTypeConverter::class, UserTypeConverter::class,)

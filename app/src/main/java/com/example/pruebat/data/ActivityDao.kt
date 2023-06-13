@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ActivityDao {
 	@Insert(onConflict = OnConflictStrategy.IGNORE)
-	fun createActivity(activity: Activity)
+	fun createActivity(activity: Activity): Long
 
 	@Query("SELECT * FROM Activity ORDER BY id ASC")
 	fun readAllActivities(): Flow<List<Activity>>

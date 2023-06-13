@@ -3,7 +3,7 @@ package com.example.pruebat.data
 import kotlinx.coroutines.flow.Flow
 
 class ActivityRepository(private val activityDao: ActivityDao) {
-	fun createActivity(activity: Activity) = activityDao.createActivity(activity)
+	fun createActivity(activity: Activity): Int = activityDao.createActivity(activity).toInt()
 
 	fun readAllActivities(): Flow<List<Activity>> = activityDao.readAllActivities()
 

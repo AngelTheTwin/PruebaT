@@ -39,9 +39,10 @@ fun AddActivity(
 		mutableStateOf(Activity(
 			name = "",
 			completed = false,
-			isOn = false,
+			isOn = true,
 			description = "",
-			dateTime = Date()
+			dateTime = Date(),
+			isEditable = true,
 		))
 	}
 
@@ -100,12 +101,11 @@ fun AddActivity(
 				}
 				Button(
 					onClick = {
-						homeScreenViewModel.addActivity(activity)
+						homeScreenViewModel.addActivity(context, activity)
 						navController.navigate(BottomBarScreen.Home.route) {
 							popUpTo(navController.graph.findStartDestination().id)
 							launchSingleTop = true
 						}
-						setAlarm(context, activity)
 					},
 					modifier = Modifier.padding(top = 16.dp)
 				) {

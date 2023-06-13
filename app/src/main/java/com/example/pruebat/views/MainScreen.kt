@@ -21,7 +21,9 @@ import com.example.pruebat.data.AppDatabase
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainScreen(
-	database: AppDatabase
+	database: AppDatabase,
+	startDestination: String? = null,
+	idActivity: Int? = null
 ) {
 	val bottomBarNavController = rememberNavController()
 
@@ -31,7 +33,9 @@ fun MainScreen(
 		Box(modifier = Modifier.padding(innerPadding)) {
 			BottonNavGraph(
 				navHostController = bottomBarNavController,
-				database = database
+				database = database,
+				startDestination = startDestination,
+				idActivity = idActivity
 			)
 		}
 

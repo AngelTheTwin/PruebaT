@@ -1,22 +1,26 @@
 package com.example.pruebat.views
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Button
-import androidx.compose.material.Checkbox
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme.colors
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.pruebat.Screen
 import com.example.pruebat.data.Activity
 import com.example.pruebat.data.ActivityDao
 import com.example.pruebat.data.ActivityRepository
@@ -26,18 +30,12 @@ import com.example.pruebat.viewmodels.HomeScreenViewModel
 import kotlinx.coroutines.flow.Flow
 import java.util.Date
 
-var activities = listOf(
-	Activity(1, "Activity 1", completed = false, "Description 1", isOn = true, Date()),
-	Activity(2, "Activity 2", completed = false, "Description 2", isOn = true, Date()),
-	Activity(3, "Activity 3", completed = true, "Description 3", isOn = false, Date())
-)
-
 @Composable
 fun HomeScreen(
 	homeScreenViewModel: HomeScreenViewModel,
 	navController: NavController
 ) {
-
+	val context = LocalContext.current
 	LazyColumn(
 		modifier = Modifier
 			.fillMaxHeight()
@@ -49,13 +47,26 @@ fun HomeScreen(
 			Text(text = "Actividades", style = MaterialTheme.typography.h4)
 		}
 		items(homeScreenViewModel.activities) { activity ->
-			ActivityItem(activity = activity) {
-				homeScreenViewModel.updateActivity(activity.copy(isOn = activity.isOn.not()))
-			}
+			ActivityItem(
+				activity = activity,
+				onTap = {
+					Log.d("nav", Screen.UpdateActivity.passArgument(activity.id))
+						navController.navigate(Screen.UpdateActivity.passArgument(activity.id))
+				},
+				onToggle = {
+					homeScreenViewModel.deactivateActivity(
+						activity.copy(isOn = activity.isOn.not()),
+						context
+					)
+				},
+				onDelete = {
+					homeScreenViewModel.deleteActivity(activity)
+				}
+			)
 		}
 		item {
 			Button(onClick = {
-				navController.navigate("AddActivity")
+				navController.navigate(Screen.AddActivity.route)
 			}) {
 				Text(text = "Add New Activity")
 			}
@@ -65,21 +76,45 @@ fun HomeScreen(
 }
 
 @Composable
-fun ActivityItem(activity: Activity, onToggle: () -> Unit) {
+fun ActivityItem(activity: Activity,onTap: () -> Unit, onToggle: () -> Unit, onDelete: () -> Unit) {
 	Row(
 		modifier = Modifier
 			.fillMaxWidth()
 			.padding(vertical = 8.dp),
-		horizontalArrangement = Arrangement.SpaceBetween
+		horizontalArrangement = Arrangement.SpaceBetween,
 	) {
-		Column(modifier = Modifier.weight(1f)) {
+		Column(
+			modifier = Modifier.weight(1f)
+				.clickable {
+					onTap()
+				}
+		) {
 			Text(text = activity.name, style = MaterialTheme.typography.body1)
 			Text(text = activity.dateTime.formatDateTime(), style = MaterialTheme.typography.caption)
 		}
-		Checkbox(
-			checked = activity.isOn,
-			onCheckedChange = { onToggle() }
-		)
+		if (activity.isEditable) {
+			Switch(
+				checked = activity.isOn,
+				onCheckedChange = { onToggle() },
+				enabled = true,
+				colors = SwitchDefaults.colors(),
+				modifier = Modifier
+			)
+			Icon(
+				imageVector = Icons.Default.Delete,
+				tint = Color.Red,
+				contentDescription = "Delete button",
+				modifier = Modifier
+					.padding(vertical = 12.dp)
+					.fillMaxHeight()
+					.clickable {
+					onDelete()
+				},
+
+			)
+		}
+
+
 	}
 }
 
@@ -98,7 +133,7 @@ fun HomeScreenPreview() {
 }
 
 class MockActivityDao: ActivityDao {
-	override fun createActivity(activity: Activity) {
+	override fun createActivity(activity: Activity): Long {
 		TODO("Not yet implemented")
 	}
 
